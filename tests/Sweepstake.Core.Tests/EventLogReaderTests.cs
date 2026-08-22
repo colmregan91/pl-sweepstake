@@ -66,6 +66,26 @@ public class EventLogSweepTests
     }
 }
 
+public class EventLogUrlTests
+{
+    /// <summary>
+    /// The event log paginates at 25. Without an explicit limit a 38-fixture season silently
+    /// returns 25 of them and every total comes out low: measured against completed 2025/26,
+    /// Haaland summed to 21 goals instead of 27 and Bruno Fernandes to 12 assists instead of
+    /// 21. Plausible numbers, quietly wrong. Do not remove the limit.
+    /// </summary>
+    [Fact]
+    public void The_event_log_url_asks_for_more_than_one_page()
+    {
+        using var espn = new EspnClient("2026", TextWriter.Null);
+
+        var url = espn.AthleteEventLogUrl("253989");
+
+        Assert.Contains($"limit={EspnClient.EventLogLimit}", url, StringComparison.Ordinal);
+        Assert.True(EspnClient.EventLogLimit >= 38, "a Premier League season is 38 fixtures");
+    }
+}
+
 public class FixtureRereadTests
 {
     private static readonly DateTimeOffset Now = new(2026, 8, 22, 20, 0, 0, TimeSpan.Zero);

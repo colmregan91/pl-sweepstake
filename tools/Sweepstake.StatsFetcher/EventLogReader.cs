@@ -190,6 +190,18 @@ internal sealed class EventLogReader(EspnClient espn, TextWriter log)
             return (athleteId, []);
         }
 
+        // The log paginates. A short page means we are about to sum a subset of a player's
+        // season and report it as the whole -- wrong numbers that look entirely plausible.
+        // Fail the run instead; a stale board beats a quietly incorrect one.
+        var expected = eventLog!.Events!.Count;
+        if (items.Count < expected)
+        {
+            throw new InvalidDataException(
+                $"The event log for athlete {athleteId} returned {items.Count} of {expected} fixtures " +
+                $"despite limit={EspnClient.EventLogLimit}. Summing a truncated log would silently " +
+                "undercount the season, so stats.json was not written. Raise the limit or add paging.");
+        }
+
         return (athleteId, items);
     }
 

@@ -48,7 +48,14 @@ internal sealed class EspnClient : IDisposable
 
     public string LeadersUrl() => $"{SeasonRoot}/types/0/leaders?limit=1000";
 
-    public string AthleteEventLogUrl(string athleteId) => $"{SeasonRoot}/athletes/{athleteId}/eventlog";
+    /// <summary>
+    /// The event log paginates at 25 by default, which silently truncates a full 38-fixture
+    /// season and undercounts every total. Always ask for the whole thing.
+    /// </summary>
+    public const int EventLogLimit = 100;
+
+    public string AthleteEventLogUrl(string athleteId) =>
+        $"{SeasonRoot}/athletes/{athleteId}/eventlog?limit={EventLogLimit}";
 
     public string AthleteStatisticsUrl(string athleteId) =>
         $"{SeasonRoot}/types/0/athletes/{athleteId}/statistics/0";
