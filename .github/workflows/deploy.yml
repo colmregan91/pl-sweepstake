@@ -83,11 +83,10 @@ jobs:
           test -s "$ROOT/data/stats.json"                            || { echo "::error::stats.json missing/empty"; exit 1; }
           echo "all four Pages gotchas handled; data files present"
 
-      # enablement turns Pages on (build_type: workflow) if it is not already, so a fresh
-      # clone of this repo deploys without anyone visiting the settings page first.
+      # Pages must already be enabled with Source = GitHub Actions, once, in repo settings.
+      # (enablement: true was tried and the workflow token is not granted the admin rights
+      # the enable API wants, so it fails before it can help.)
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       # 4. It is publish/wwwroot that gets uploaded, not the publish folder.
       - uses: actions/upload-pages-artifact@v3
