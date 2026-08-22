@@ -1,0 +1,97 @@
+@*
+    One leaderboard. Five columns, matching the source spreadsheet:
+    entrant (first row of the block only) - player - club - odds - value.
+*@
+
+<section class="panel panel-@Kind">
+    <div class="panel-scroll" tabindex="0" role="region" aria-label="@Title">
+        <table class="board">
+            <colgroup>
+                <col class="col-entrant" />
+                <col class="col-player" />
+                <col class="col-club" />
+                <col class="col-odds" />
+                <col class="col-value" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col"><span class="sr-only">Entrant</span></th>
+                    <th scope="col">@Title</th>
+                    <th scope="col">Club</th>
+                    <th scope="col">Player Odds</th>
+                    <th scope="col" class="num">@ValueHeader</th>
+                </tr>
+            </thead>
+
+            @foreach (var entrant in Entrants)
+            {
+                <tbody @key="entrant.Name" class="entrant-block @RankClass(entrant) @MoveClass(entrant.Name)">
+                    @for (var i = 0; i < entrant.Picks.Count; i++)
+                    {
+                        var pick = entrant.Picks[i];
+                        var index = i;
+
+                        <tr class="player-row">
+                            @if (index == 0)
+                            {
+                                <th scope="rowgroup" rowspan="@entrant.Picks.Count" class="entrant-name">
+                                    <span class="rank" aria-label="Rank @entrant.Rank">@entrant.Rank</span>
+                                    <span class="who">@entrant.Name</span>
+                                </th>
+                            }
+                            <td class="player">@pick.Player.Name</td>
+                            <td class="club">@pick.Player.Club</td>
+                            <td class="odds">@pick.Odds</td>
+                            <td class="num value @ValueClass(entrant.Name, pick.EspnId)">@pick.Value</td>
+                        </tr>
+                    }
+
+                    <tr class="totals">
+                        <th scope="row">Totals</th>
+                        <td colspan="2"></td>
+                        <td class="odds">@(entrant.OddsTotal)/1</td>
+                        <td class="num value">@entrant.Total</td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>
+</section>
+
+@code {
+    /// <summary>"goals" or "assists" - drives the Totals row colour.</summary>
+    [Parameter, EditorRequired]
+    public required string Kind { get; init; }
+
+    /// <summary>Column header over the player names, e.g. "Top Goalscorer Picks".</summary>
+    [Parameter, EditorRequired]
+    public required string Title { get; init; }
+
+    /// <summary>Column header over the numbers, e.g. "Goals".</summary>
+    [Parameter, EditorRequired]
+    public required string ValueHeader { get; init; }
+
+    [Parameter, EditorRequired]
+    public required IReadOnlyList<ScoredEntrant> Entrants { get; init; }
+
+    /// <summary>"entrant|espnId" keys whose value moved in the latest refresh.</summary>
+    [Parameter]
+    public IReadOnlySet<string> ChangedValues { get; init; } = new HashSet<string>(StringComparer.Ordinal);
+
+    /// <summary>Entrant name to how far their rank moved: negative is up the board.</summary>
+    [Parameter]
+    public IReadOnlyDictionary<string, int> RankMoves { get; init; } =
+        new Dictionary<string, int>(StringComparer.Ordinal);
+
+    public static string ValueKey(string entrant, string espnId) => $"{entrant}|{espnId}";
+
+    private static string RankClass(ScoredEntrant entrant) =>
+        entrant.Rank <= 3 ? $"rank-{entrant.Rank}" : string.Empty;
+
+    private string MoveClass(string entrant) => RankMoves.TryGetValue(entrant, out var delta)
+        ? delta < 0 ? "moved-up" : "moved-down"
+        : string.Empty;
+
+    private string ValueClass(string entrant, string espnId) =>
+        ChangedValues.Contains(ValueKey(entrant, espnId)) ? "value-changed" : string.Empty;
+}

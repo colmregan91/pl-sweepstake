@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Sweepstake.StatsFetcher</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sweepstake.Core\Sweepstake.Core.csproj" />
+  </ItemGroup>
+
+  <!-- The $ref id parsing and the name fold are pure and load-bearing; they get unit tests. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sweepstake.Core.Tests" />
+  </ItemGroup>
+
+</Project>

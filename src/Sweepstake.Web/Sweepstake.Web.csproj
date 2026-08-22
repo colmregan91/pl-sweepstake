@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.11" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sweepstake.Core\Sweepstake.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    The app serves picks.json from its own origin, but the file is maintained once at the repo
+    root. Copy it into wwwroot before the static web assets are enumerated, so the dev server
+    and the publish output both see a real file. The copy is gitignored; data/picks.json stays
+    the single source of truth.
+
+    (A Content item with Link="wwwroot\data\picks.json" looks tidier, but it registers the
+    asset with no bytes behind it, and the dev server then serves Content-Length: 0.)
+  -->
+  <Target Name="CopyPicksIntoWwwroot" BeforeTargets="BeforeBuild;BeforePublish">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)..\..\data\picks.json"
+          DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\data"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

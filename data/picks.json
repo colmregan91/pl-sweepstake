@@ -1,0 +1,690 @@
+{
+  "$comment": "Sweepstake picks for the 2026/27 Premier League season. Picks reference players by ESPN athlete id ONLY -- no string matching at runtime. The 'players' registry maps each id to its display name and club. Ids were resolved from live ESPN season-2026 rosters on 2026-08-22 and each was confirmed via the athlete endpoint. 'club' is display-only. 'sheetName' records the name used in the original spreadsheet where it differs from ESPN's. Odds are display-only; the odds Totals column is the sum of the three numerators and must be derived, not hardcoded.",
+  "season": "2026",
+  "seasonLabel": "2026/27",
+  "competition": "eng.1",
+  "players": {
+    "175063": {
+      "name": "Alex Iwobi",
+      "club": "Fulham"
+    },
+    "235662": {
+      "name": "Alexander Isak",
+      "club": "Liverpool"
+    },
+    "273292": {
+      "name": "Antoine Semenyo",
+      "club": "Manchester City"
+    },
+    "289155": {
+      "name": "Benjamin Šeško",
+      "club": "Manchester United"
+    },
+    "282229": {
+      "name": "Brian Brobbey",
+      "club": "Sunderland"
+    },
+    "124091": {
+      "name": "Bruno Fernandes",
+      "club": "Manchester United"
+    },
+    "218522": {
+      "name": "Bruno Guimarães",
+      "club": "Arsenal"
+    },
+    "271170": {
+      "name": "Bryan Mbeumo",
+      "club": "Manchester United"
+    },
+    "280555": {
+      "name": "Bukayo Saka",
+      "club": "Arsenal"
+    },
+    "134190": {
+      "name": "Chris Wood",
+      "club": "Nottingham Forest"
+    },
+    "249524": {
+      "name": "Cody Gakpo",
+      "club": "Liverpool"
+    },
+    "296395": {
+      "name": "Cole Palmer",
+      "club": "Chelsea"
+    },
+    "315530": {
+      "name": "Dango Ouattara",
+      "club": "Brentford"
+    },
+    "146679": {
+      "name": "Daniel Muñoz",
+      "club": "Crystal Palace"
+    },
+    "197717": {
+      "name": "Dominic Calvert-Lewin",
+      "club": "Leeds United"
+    },
+    "257206": {
+      "name": "Dominik Szoboszlai",
+      "club": "Liverpool"
+    },
+    "253989": {
+      "name": "Erling Haaland",
+      "club": "Manchester City"
+    },
+    "102368": {
+      "name": "Evanilson",
+      "club": "AFC Bournemouth"
+    },
+    "303748": {
+      "name": "Florian Wirtz",
+      "club": "Liverpool"
+    },
+    "194801": {
+      "name": "Harry Wilson",
+      "club": "Leeds United"
+    },
+    "287869": {
+      "name": "Igor Jesus",
+      "club": "Nottingham Forest"
+    },
+    "301894": {
+      "name": "Igor Thiago",
+      "club": "Brentford",
+      "sheetName": "Thiago"
+    },
+    "194450": {
+      "name": "James Maddison",
+      "club": "Tottenham Hotspur"
+    },
+    "241187": {
+      "name": "Jean-Philippe Mateta",
+      "club": "Crystal Palace"
+    },
+    "386992": {
+      "name": "Johan Manzambi",
+      "club": "Aston Villa"
+    },
+    "284960": {
+      "name": "João Pedro",
+      "club": "Chelsea"
+    },
+    "283672": {
+      "name": "Jérémy Doku",
+      "club": "Manchester City"
+    },
+    "231182": {
+      "name": "Kai Havertz",
+      "club": "Arsenal"
+    },
+    "203669": {
+      "name": "Martin Ødegaard",
+      "club": "Arsenal"
+    },
+    "243396": {
+      "name": "Morgan Gibbs-White",
+      "club": "Nottingham Forest"
+    },
+    "265653": {
+      "name": "Morgan Rogers",
+      "club": "Chelsea"
+    },
+    "132659": {
+      "name": "Pascal Groß",
+      "club": "Brighton & Hove Albion"
+    },
+    "268533": {
+      "name": "Pedro Porro",
+      "club": "Tottenham Hotspur"
+    },
+    "250787": {
+      "name": "Phil Foden",
+      "club": "Manchester City"
+    },
+    "301166": {
+      "name": "Thierno Barry",
+      "club": "Everton"
+    },
+    "258906": {
+      "name": "Viktor Gyökeres",
+      "club": "Arsenal"
+    },
+    "224077": {
+      "name": "Yoane Wissa",
+      "club": "Newcastle United"
+    },
+    "193297": {
+      "name": "Youri Tielemans",
+      "club": "Manchester United"
+    }
+  },
+  "entrants": [
+    {
+      "name": "Eanan",
+      "goalscorers": [
+        {
+          "espnId": "235662",
+          "odds": "8/1"
+        },
+        {
+          "espnId": "296395",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "124091",
+          "odds": "80/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "296395",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "203669",
+          "odds": "18/1"
+        },
+        {
+          "espnId": "268533",
+          "odds": "100/1"
+        }
+      ]
+    },
+    {
+      "name": "Joey",
+      "goalscorers": [
+        {
+          "espnId": "284960",
+          "odds": "16/1"
+        },
+        {
+          "espnId": "296395",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "124091",
+          "odds": "80/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "265653",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "218522",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "253989",
+          "odds": "66/1"
+        }
+      ]
+    },
+    {
+      "name": "Johnny",
+      "goalscorers": [
+        {
+          "espnId": "235662",
+          "odds": "8/1"
+        },
+        {
+          "espnId": "301894",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "134190",
+          "odds": "150/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "132659",
+          "odds": "100/1"
+        },
+        {
+          "espnId": "296395",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "243396",
+          "odds": "25/1"
+        }
+      ]
+    },
+    {
+      "name": "Tarig",
+      "goalscorers": [
+        {
+          "espnId": "273292",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "271170",
+          "odds": "50/1"
+        },
+        {
+          "espnId": "241187",
+          "odds": "50/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "257206",
+          "odds": "12/1"
+        },
+        {
+          "espnId": "303748",
+          "odds": "14/1"
+        },
+        {
+          "espnId": "146679",
+          "odds": "100/1"
+        }
+      ]
+    },
+    {
+      "name": "Ste D",
+      "goalscorers": [
+        {
+          "espnId": "235662",
+          "odds": "8/1"
+        },
+        {
+          "espnId": "284960",
+          "odds": "16/1"
+        },
+        {
+          "espnId": "282229",
+          "odds": "150/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "280555",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "250787",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "146679",
+          "odds": "100/1"
+        }
+      ]
+    },
+    {
+      "name": "Mossy",
+      "goalscorers": [
+        {
+          "espnId": "296395",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "231182",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "197717",
+          "odds": "50/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "218522",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "249524",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "194801",
+          "odds": "50/1"
+        }
+      ]
+    },
+    {
+      "name": "Liamo",
+      "goalscorers": [
+        {
+          "espnId": "284960",
+          "odds": "16/1"
+        },
+        {
+          "espnId": "271170",
+          "odds": "50/1"
+        },
+        {
+          "espnId": "283672",
+          "odds": "100/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "243396",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "265653",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "132659",
+          "odds": "100/1"
+        }
+      ]
+    },
+    {
+      "name": "Demo",
+      "goalscorers": [
+        {
+          "espnId": "231182",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "224077",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "271170",
+          "odds": "50/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "296395",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "203669",
+          "odds": "18/1"
+        },
+        {
+          "espnId": "132659",
+          "odds": "100/1"
+        }
+      ]
+    },
+    {
+      "name": "Tunney",
+      "goalscorers": [
+        {
+          "espnId": "235662",
+          "odds": "8/1"
+        },
+        {
+          "espnId": "287869",
+          "odds": "100/1"
+        },
+        {
+          "espnId": "289155",
+          "odds": "20/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "296395",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "203669",
+          "odds": "18/1"
+        },
+        {
+          "espnId": "132659",
+          "odds": "100/1"
+        }
+      ]
+    },
+    {
+      "name": "Shero",
+      "goalscorers": [
+        {
+          "espnId": "287869",
+          "odds": "100/1"
+        },
+        {
+          "espnId": "273292",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "235662",
+          "odds": "8/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "284960",
+          "odds": "66/1"
+        },
+        {
+          "espnId": "253989",
+          "odds": "66/1"
+        },
+        {
+          "espnId": "303748",
+          "odds": "14/1"
+        }
+      ]
+    },
+    {
+      "name": "Raleigh",
+      "goalscorers": [
+        {
+          "espnId": "301894",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "273292",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "287869",
+          "odds": "100/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "280555",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "303748",
+          "odds": "14/1"
+        },
+        {
+          "espnId": "315530",
+          "odds": "150/1"
+        }
+      ]
+    },
+    {
+      "name": "Cormo",
+      "goalscorers": [
+        {
+          "espnId": "235662",
+          "odds": "8/1"
+        },
+        {
+          "espnId": "258906",
+          "odds": "20/1"
+        },
+        {
+          "espnId": "287869",
+          "odds": "100/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "271170",
+          "odds": "66/1"
+        },
+        {
+          "espnId": "296395",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "194801",
+          "odds": "50/1"
+        }
+      ]
+    },
+    {
+      "name": "Jimmy H",
+      "goalscorers": [
+        {
+          "espnId": "258906",
+          "odds": "20/1"
+        },
+        {
+          "espnId": "124091",
+          "odds": "80/1"
+        },
+        {
+          "espnId": "197717",
+          "odds": "50/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "271170",
+          "odds": "66/1"
+        },
+        {
+          "espnId": "194801",
+          "odds": "50/1"
+        },
+        {
+          "espnId": "194450",
+          "odds": "33/1"
+        }
+      ]
+    },
+    {
+      "name": "Skurto",
+      "goalscorers": [
+        {
+          "espnId": "273292",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "280555",
+          "odds": "80/1"
+        },
+        {
+          "espnId": "289155",
+          "odds": "20/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "257206",
+          "odds": "12/1"
+        },
+        {
+          "espnId": "194801",
+          "odds": "50/1"
+        },
+        {
+          "espnId": "253989",
+          "odds": "66/1"
+        }
+      ]
+    },
+    {
+      "name": "Deco",
+      "goalscorers": [
+        {
+          "espnId": "258906",
+          "odds": "20/1"
+        },
+        {
+          "espnId": "235662",
+          "odds": "8/1"
+        },
+        {
+          "espnId": "301166",
+          "odds": "100/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "257206",
+          "odds": "12/1"
+        },
+        {
+          "espnId": "250787",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "175063",
+          "odds": "100/1"
+        }
+      ]
+    },
+    {
+      "name": "Brophy",
+      "goalscorers": [
+        {
+          "espnId": "271170",
+          "odds": "50/1"
+        },
+        {
+          "espnId": "241187",
+          "odds": "50/1"
+        },
+        {
+          "espnId": "296395",
+          "odds": "40/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "268533",
+          "odds": "100/1"
+        },
+        {
+          "espnId": "303748",
+          "odds": "14/1"
+        },
+        {
+          "espnId": "273292",
+          "odds": "50/1"
+        }
+      ]
+    },
+    {
+      "name": "Ciano",
+      "goalscorers": [
+        {
+          "espnId": "301894",
+          "odds": "10/1"
+        },
+        {
+          "espnId": "284960",
+          "odds": "16/1"
+        },
+        {
+          "espnId": "102368",
+          "odds": "100/1"
+        }
+      ],
+      "assisters": [
+        {
+          "espnId": "265653",
+          "odds": "25/1"
+        },
+        {
+          "espnId": "193297",
+          "odds": "40/1"
+        },
+        {
+          "espnId": "386992",
+          "odds": "80/1"
+        }
+      ]
+    }
+  ]
+}

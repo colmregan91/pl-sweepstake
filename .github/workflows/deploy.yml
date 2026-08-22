@@ -1,0 +1,103 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  # A push made with GITHUB_TOKEN does not trigger further workflows, so the bot's stats
+  # commit would never reach Pages on its own. This is what picks it up.
+  workflow_run:
+    workflows: ["update-stats"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time. Superseding an in-flight deploy is fine: the newer commit wins.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+jobs:
+  build:
+    # A failed or cancelled stats refresh must not publish anything.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # On workflow_run, github.sha is the commit the *triggering* run started from,
+          # which predates the bot's stats commit. Checking out the branch head instead is
+          # what makes a stats update actually reach the site.
+          ref: ${{ github.event.workflow_run.head_branch || github.ref_name }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      # Includes the picks.json integrity test, so a bad hand-edit fails the deploy rather
+      # than publishing a board with wrong numbers on it.
+      - name: Test
+        run: dotnet test -c Release
+
+      - name: Publish
+        run: dotnet publish src/Sweepstake.Web -c Release -o publish
+
+      # The four things that break Blazor WASM on Pages. Each one fails silently and shows a
+      # blank white page, so every one is asserted rather than assumed.
+      - name: Prepare for GitHub Pages
+        run: |
+          set -euo pipefail
+          ROOT="publish/wwwroot"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+
+          # 1. Jekyll would strip _framework/. Not applicable to the artifact-based Pages
+          #    flow used here, but it costs nothing and protects a branch-based fallback.
+          touch "$ROOT/.nojekyll"
+
+          # 2. A project site is served from /<repo-name>/, not /.
+          sed -i "s|<base href=\"/\" />|<base href=\"/${REPO_NAME}/\" />|" "$ROOT/index.html"
+
+          # 3. Pages has no SPA rewrite, so deep links need a 404 that is the app.
+          cp "$ROOT/index.html" "$ROOT/404.html"
+
+          # Publish emits .br/.gz sidecars for ASP.NET Core's static-file middleware to
+          # content-negotiate. Pages does not read them; it compresses on its own. They are
+          # ~40% of the artifact, and index.html.gz would sit at a public URL still carrying
+          # the pre-rewrite base href.
+          find "$ROOT" \( -name "*.br" -o -name "*.gz" \) -type f -delete
+
+          echo "--- assertions ---"
+          test -f "$ROOT/.nojekyll"                                  || { echo "::error::.nojekyll missing";        exit 1; }
+          grep -q "<base href=\"/${REPO_NAME}/\" />" "$ROOT/index.html" || { echo "::error::base href not rewritten"; exit 1; }
+          grep -q "<base href=\"/${REPO_NAME}/\" />" "$ROOT/404.html"   || { echo "::error::404.html not rewritten";  exit 1; }
+          test -d "$ROOT/_framework"                                 || { echo "::error::_framework missing";      exit 1; }
+          test -s "$ROOT/data/picks.json"                            || { echo "::error::picks.json missing/empty"; exit 1; }
+          test -s "$ROOT/data/stats.json"                            || { echo "::error::stats.json missing/empty"; exit 1; }
+          echo "all four Pages gotchas handled; data files present"
+
+      - uses: actions/configure-pages@v5
+
+      # 4. It is publish/wwwroot that gets uploaded, not the publish folder.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish/wwwroot
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

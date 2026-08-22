@@ -1,0 +1,93 @@
+name: update-stats
+
+# Refreshes wwwroot/data/stats.json from ESPN and commits it only when a number actually
+# moved. GitHub's scheduler is best-effort -- runs are routinely 10-30 minutes late and are
+# occasionally dropped entirely. That is fine here: the page renders generatedUtc, so
+# staleness is always visible. Nothing in the app assumes this fired on time.
+
+on:
+  schedule:
+    # Incremental: cheap, and free when nothing is in play.
+    - cron: "*/15 * * * *"
+    # Nightly full rebuild, so a settled fixture that Opta amended late still gets corrected.
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+    inputs:
+      rebuild:
+        description: "Re-read every fixture, ignoring the settled-fixture cache"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Never let two refreshes race each other onto the same branch.
+concurrency:
+  group: update-stats
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      # The 04:17 schedule and the manual rebuild box both force a full re-read.
+      - name: Decide whether this is a rebuild
+        id: mode
+        run: |
+          if [ "${{ github.event.schedule }}" = "17 4 * * *" ] || [ "${{ inputs.rebuild }}" = "true" ]; then
+            echo "args=--rebuild" >> "$GITHUB_OUTPUT"
+          else
+            echo "args=" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Exits non-zero without writing anything if ESPN fails or hands back an implausible
+      # payload, which fails the job and leaves the last good stats.json committed.
+      # Writes changed=true|false to $GITHUB_OUTPUT by comparing player data only, so a
+      # moved generatedUtc on its own does not count as a change.
+      - name: Fetch stats from ESPN
+        id: fetch
+        run: dotnet run --project tools/Sweepstake.StatsFetcher -c Release -- fetch ${{ steps.mode.outputs.args }}
+
+      # The fixture cache rides along with the stats it produced, so the two never disagree.
+      - name: Commit refreshed stats
+        if: steps.fetch.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- src/Sweepstake.Web/wwwroot/data/stats.json data/match-stats.json
+
+          if git diff --cached --quiet; then
+            echo "The fetcher reported a change but the files are byte-identical; nothing to commit."
+            exit 0
+          fi
+
+          git commit -m "chore(stats): refresh goals and assists from ESPN"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Stats refresh"
+            echo
+            if [ "${{ steps.fetch.outcome }}" != "success" ]; then
+              echo "Fetch failed. **stats.json was not written** and the last good file is untouched."
+            elif [ "${{ steps.fetch.outputs.changed }}" = "true" ]; then
+              echo "Player data changed - committed."
+            else
+              echo "No player data changed - only \`generatedUtc\` moved, so no commit was made."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

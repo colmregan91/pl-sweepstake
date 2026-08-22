@@ -1,0 +1,197 @@
+{
+  "generatedUtc": "2026-08-22T21:39:26Z",
+  "season": "2026",
+  "source": "espn-core-api",
+  "players": {
+    "175063": {
+      "name": "Alex Iwobi",
+      "goals": 0,
+      "assists": 0
+    },
+    "235662": {
+      "name": "Alexander Isak",
+      "goals": 0,
+      "assists": 0
+    },
+    "273292": {
+      "name": "Antoine Semenyo",
+      "goals": 0,
+      "assists": 0
+    },
+    "289155": {
+      "name": "Benjamin Šeško",
+      "goals": 0,
+      "assists": 0
+    },
+    "282229": {
+      "name": "Brian Brobbey",
+      "goals": 0,
+      "assists": 0
+    },
+    "124091": {
+      "name": "Bruno Fernandes",
+      "goals": 0,
+      "assists": 0
+    },
+    "218522": {
+      "name": "Bruno Guimarães",
+      "goals": 0,
+      "assists": 0
+    },
+    "271170": {
+      "name": "Bryan Mbeumo",
+      "goals": 0,
+      "assists": 0
+    },
+    "280555": {
+      "name": "Bukayo Saka",
+      "goals": 1,
+      "assists": 0
+    },
+    "134190": {
+      "name": "Chris Wood",
+      "goals": 0,
+      "assists": 0
+    },
+    "249524": {
+      "name": "Cody Gakpo",
+      "goals": 0,
+      "assists": 0
+    },
+    "296395": {
+      "name": "Cole Palmer",
+      "goals": 0,
+      "assists": 0
+    },
+    "315530": {
+      "name": "Dango Ouattara",
+      "goals": 0,
+      "assists": 0
+    },
+    "146679": {
+      "name": "Daniel Muñoz",
+      "goals": 0,
+      "assists": 0
+    },
+    "197717": {
+      "name": "Dominic Calvert-Lewin",
+      "goals": 0,
+      "assists": 0
+    },
+    "257206": {
+      "name": "Dominik Szoboszlai",
+      "goals": 0,
+      "assists": 0
+    },
+    "253989": {
+      "name": "Erling Haaland",
+      "goals": 0,
+      "assists": 0
+    },
+    "102368": {
+      "name": "Evanilson",
+      "goals": 0,
+      "assists": 0
+    },
+    "303748": {
+      "name": "Florian Wirtz",
+      "goals": 0,
+      "assists": 0
+    },
+    "194801": {
+      "name": "Harry Wilson",
+      "goals": 0,
+      "assists": 0
+    },
+    "287869": {
+      "name": "Igor Jesus",
+      "goals": 0,
+      "assists": 0
+    },
+    "301894": {
+      "name": "Igor Thiago",
+      "goals": 0,
+      "assists": 0
+    },
+    "194450": {
+      "name": "James Maddison",
+      "goals": 0,
+      "assists": 0
+    },
+    "241187": {
+      "name": "Jean-Philippe Mateta",
+      "goals": 0,
+      "assists": 0
+    },
+    "386992": {
+      "name": "Johan Manzambi",
+      "goals": 0,
+      "assists": 0
+    },
+    "284960": {
+      "name": "João Pedro",
+      "goals": 0,
+      "assists": 0
+    },
+    "283672": {
+      "name": "Jérémy Doku",
+      "goals": 0,
+      "assists": 0
+    },
+    "231182": {
+      "name": "Kai Havertz",
+      "goals": 1,
+      "assists": 0
+    },
+    "203669": {
+      "name": "Martin Ødegaard",
+      "goals": 1,
+      "assists": 0
+    },
+    "243396": {
+      "name": "Morgan Gibbs-White",
+      "goals": 0,
+      "assists": 0
+    },
+    "265653": {
+      "name": "Morgan Rogers",
+      "goals": 0,
+      "assists": 0
+    },
+    "132659": {
+      "name": "Pascal Groß",
+      "goals": 0,
+      "assists": 0
+    },
+    "268533": {
+      "name": "Pedro Porro",
+      "goals": 0,
+      "assists": 0
+    },
+    "250787": {
+      "name": "Phil Foden",
+      "goals": 0,
+      "assists": 0
+    },
+    "301166": {
+      "name": "Thierno Barry",
+      "goals": 1,
+      "assists": 0
+    },
+    "258906": {
+      "name": "Viktor Gyökeres",
+      "goals": 0,
+      "assists": 0
+    },
+    "224077": {
+      "name": "Yoane Wissa",
+      "goals": 0,
+      "assists": 0
+    },
+    "193297": {
+      "name": "Youri Tielemans",
+      "goals": 0,
+      "assists": 0
+    }
+  }
+}

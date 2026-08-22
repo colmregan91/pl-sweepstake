@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Pure library: models + leaderboard maths. No I/O, no packages. -->
+
+</Project>

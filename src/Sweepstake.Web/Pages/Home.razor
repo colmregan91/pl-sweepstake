@@ -1,0 +1,47 @@
+@page "/"
+
+<PageTitle>PL Sweepstake @(SeasonLabel)</PageTitle>
+
+<header class="masthead">
+    <h1>Premier League Sweepstake</h1>
+    <p class="season">@SeasonLabel</p>
+</header>
+
+@if (_loadError is not null)
+{
+    <p class="load-error" role="alert">
+        Could not load the sweepstake data. @_loadError
+    </p>
+}
+else if (!_loaded)
+{
+    <p class="loading">Loading the boards…</p>
+}
+else
+{
+    <div class="boards">
+        <BoardPanel Kind="goals"
+                    Title="Top Goalscorer Picks"
+                    ValueHeader="Goals"
+                    Entrants="_goals"
+                    ChangedValues="_changedGoals"
+                    RankMoves="_goalRankMoves" />
+
+        <div class="gutter" aria-hidden="true"></div>
+
+        <BoardPanel Kind="assists"
+                    Title="Top Assister Picks"
+                    ValueHeader="Assists"
+                    Entrants="_assists"
+                    ChangedValues="_changedAssists"
+                    RankMoves="_assistRankMoves" />
+    </div>
+
+    <footer class="foot">
+        <p class="updated">@UpdatedText</p>
+        <p class="note">
+            Ranked on total goals and total assists. Equal totals share a rank.
+            Stats from ESPN, refreshed automatically.
+        </p>
+    </footer>
+}

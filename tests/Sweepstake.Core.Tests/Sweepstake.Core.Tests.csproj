@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sweepstake.Core\Sweepstake.Core.csproj" />
+    <ProjectReference Include="..\..\tools\Sweepstake.StatsFetcher\Sweepstake.StatsFetcher.csproj" />
+  </ItemGroup>
+
+  <!--
+    The integrity test asserts against the real hand-maintained file, not a copy of its
+    contents pasted into a fixture. Linked so a bad edit fails the build immediately.
+  -->
+  <ItemGroup>
+    <None Include="..\..\data\picks.json" Link="data\picks.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

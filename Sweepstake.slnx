@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Sweepstake.Core/Sweepstake.Core.csproj" />
+    <Project Path="src/Sweepstake.Web/Sweepstake.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Sweepstake.Core.Tests/Sweepstake.Core.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Sweepstake.StatsFetcher/Sweepstake.StatsFetcher.csproj" />
+  </Folder>
+</Solution>
