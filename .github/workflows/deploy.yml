@@ -83,7 +83,11 @@ jobs:
           test -s "$ROOT/data/stats.json"                            || { echo "::error::stats.json missing/empty"; exit 1; }
           echo "all four Pages gotchas handled; data files present"
 
+      # enablement turns Pages on (build_type: workflow) if it is not already, so a fresh
+      # clone of this repo deploys without anyone visiting the settings page first.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       # 4. It is publish/wwwroot that gets uploaded, not the publish folder.
       - uses: actions/upload-pages-artifact@v3
