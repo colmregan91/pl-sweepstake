@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-23T17:09:38Z",
+  "generatedUtc": "2026-08-23T17:37:53Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -80,7 +80,7 @@
     },
     "257206": {
       "name": "Dominik Szoboszlai",
-      "goals": 0,
+      "goals": 1,
       "assists": 0
     },
     "253989": {
