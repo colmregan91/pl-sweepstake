@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-23T13:40:16Z",
+  "generatedUtc": "2026-08-23T16:44:58Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -55,7 +55,7 @@
     },
     "249524": {
       "name": "Cody Gakpo",
-      "goals": 0,
+      "goals": 1,
       "assists": 0
     },
     "296395": {
