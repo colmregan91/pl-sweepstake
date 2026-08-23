@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-23T16:44:58Z",
+  "generatedUtc": "2026-08-23T17:09:38Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -186,7 +186,7 @@
     "224077": {
       "name": "Yoane Wissa",
       "goals": 0,
-      "assists": 0
+      "assists": 1
     },
     "193297": {
       "name": "Youri Tielemans",
