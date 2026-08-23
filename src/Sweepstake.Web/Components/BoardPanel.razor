@@ -1,6 +1,11 @@
 @*
-    One leaderboard. Five columns, matching the source spreadsheet:
-    entrant (first row of the block only) - player - club - odds - value.
+    One leaderboard. Four columns:
+    entrant (first row of the block only) - player - club - value.
+
+    The spreadsheet also carried a Player Odds column and an odds Totals figure. Both are
+    dropped from the board: they never changed and only made the table wider. The odds are
+    still in picks.json and still derived and asserted in the tests, as an integrity check
+    on that hand-maintained file.
 *@
 
 <section class="panel panel-@Kind">
@@ -10,7 +15,6 @@
                 <col class="col-entrant" />
                 <col class="col-player" />
                 <col class="col-club" />
-                <col class="col-odds" />
                 <col class="col-value" />
             </colgroup>
             <thead>
@@ -18,7 +22,6 @@
                     <th scope="col"><span class="sr-only">Entrant</span></th>
                     <th scope="col">@Title</th>
                     <th scope="col">Club</th>
-                    <th scope="col">Player Odds</th>
                     <th scope="col" class="num">@ValueHeader</th>
                 </tr>
             </thead>
@@ -41,7 +44,6 @@
                             }
                             <td class="player">@pick.Player.Name</td>
                             <td class="club">@pick.Player.Club</td>
-                            <td class="odds">@pick.Odds</td>
                             <td class="num value @ValueClass(entrant.Name, pick.EspnId)">@pick.Value</td>
                         </tr>
                     }
@@ -49,7 +51,6 @@
                     <tr class="totals">
                         <th scope="row">Totals</th>
                         <td colspan="2"></td>
-                        <td class="odds">@(entrant.OddsTotal)/1</td>
                         <td class="num value">@entrant.Total</td>
                     </tr>
                 </tbody>

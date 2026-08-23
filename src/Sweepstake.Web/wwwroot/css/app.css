@@ -100,7 +100,7 @@ main { display: block; padding: 1.25rem clamp(.5rem, 2vw, 1.5rem) 2.5rem; }
 
 /* ---------- masthead ---------- */
 
-.masthead { margin: 0 0 1rem; }
+.masthead { margin: 0 auto 1rem; max-width: 1180px; }
 
 .masthead h1 {
     margin: 0;
@@ -135,6 +135,11 @@ main { display: block; padding: 1.25rem clamp(.5rem, 2vw, 1.5rem) 2.5rem; }
     grid-template-columns: 1fr auto 1fr;
     align-items: start;
     gap: 0;
+
+    /* Four columns do not need a whole 27-inch monitor. Cap it and centre, otherwise the
+       rows stretch into mostly whitespace and the eye has to travel to reach the number. */
+    max-width: 1180px;
+    margin-inline: auto;
 }
 
 .gutter {
@@ -158,16 +163,15 @@ main { display: block; padding: 1.25rem clamp(.5rem, 2vw, 1.5rem) 2.5rem; }
 
 .board {
     width: 100%;
-    min-width: 420px;
+    min-width: 340px;
     border-collapse: collapse;
     font-size: .82rem;
 }
 
-.col-entrant { width: 15%; }
-.col-player  { width: 33%; }
-.col-club    { width: 25%; }
-.col-odds    { width: 14%; }
-.col-value   { width: 13%; }
+.col-entrant { width: 18%; }
+.col-player  { width: 38%; }
+.col-club    { width: 30%; }
+.col-value   { width: 14%; }
 
 .board thead th {
     position: sticky;
@@ -190,7 +194,6 @@ main { display: block; padding: 1.25rem clamp(.5rem, 2vw, 1.5rem) 2.5rem; }
 }
 
 .board .num { text-align: right; font-variant-numeric: tabular-nums; }
-.board .odds { font-variant-numeric: tabular-nums; color: var(--c-muted); }
 .board .club { color: var(--c-muted); }
 .board .value { font-family: var(--font-num); color: var(--c-number); font-weight: 600; }
 
@@ -236,7 +239,6 @@ main { display: block; padding: 1.25rem clamp(.5rem, 2vw, 1.5rem) 2.5rem; }
     padding-bottom: .3rem;
 }
 
-.totals .odds { color: var(--c-total-text); opacity: .95; }
 .totals .value { color: var(--c-total-text); }
 
 .panel-goals   .totals th, .panel-goals   .totals td { background: var(--c-goals-total); }
@@ -278,7 +280,7 @@ main { display: block; padding: 1.25rem clamp(.5rem, 2vw, 1.5rem) 2.5rem; }
 
 /* ---------- footer ---------- */
 
-.foot { margin-top: 1rem; color: var(--c-muted); font-size: .78rem; }
+.foot { margin: 1rem auto 0; max-width: 1180px; color: var(--c-muted); font-size: .78rem; }
 .foot p { margin: .2rem 0; }
 .foot .updated { font-variant-numeric: tabular-nums; }
 
