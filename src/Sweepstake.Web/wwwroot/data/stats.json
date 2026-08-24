@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-24T19:05:56Z",
+  "generatedUtc": "2026-08-24T19:47:23Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -155,7 +155,7 @@
     },
     "265653": {
       "name": "Morgan Rogers",
-      "goals": 0,
+      "goals": 1,
       "assists": 0
     },
     "132659": {
