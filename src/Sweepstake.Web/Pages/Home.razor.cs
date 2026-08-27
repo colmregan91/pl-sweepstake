@@ -1,4 +1,3 @@
-using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Sweepstake.Core;
@@ -8,8 +7,19 @@ namespace Sweepstake.Web.Pages;
 
 public sealed partial class Home : IAsyncDisposable
 {
-    /// <summary>How often to look for a new stats.json while the tab is in the foreground.</summary>
-    private static readonly TimeSpan RefreshInterval = TimeSpan.FromMinutes(10);
+    /// <summary>
+    /// The <c>*/15</c> schedule in .github/workflows/update-stats.yml. The page looks on the
+    /// same cadence as the workflow so the footer can count down to a real event rather than
+    /// to a phase set by whenever the tab happened to load.
+    /// </summary>
+    private static readonly TimeSpan CheckInterval = TimeSpan.FromMinutes(15);
+
+    /// <summary>
+    /// How long after each quarter-hour to look. The workflow still has to fetch, commit and
+    /// deploy after the cron fires, and GitHub starts it late as often as not, so looking
+    /// exactly on the boundary would usually just re-read the previous build.
+    /// </summary>
+    private static readonly TimeSpan CheckOffset = TimeSpan.FromMinutes(2);
 
     /// <summary>How long a changed value stays highlighted.</summary>
     private static readonly TimeSpan HighlightDuration = TimeSpan.FromSeconds(8);
@@ -30,6 +40,8 @@ public sealed partial class Home : IAsyncDisposable
     private string? _loadError;
     private bool _tabVisible = true;
     private int _highlightGeneration;
+    private DateTimeOffset _nextCheckUtc = NextCheckAfter(DateTimeOffset.UtcNow);
+    private bool _checking;
 
     private IJSObjectReference? _visibility;
     private DotNetObjectReference<Home>? _self;
@@ -42,9 +54,22 @@ public sealed partial class Home : IAsyncDisposable
 
     private string SeasonLabel => _picks?.SeasonLabel ?? string.Empty;
 
-    private string UpdatedText => _stats is null || !_haveRealStats
-        ? "Awaiting the first stats update."
-        : $"Last updated {_stats.GeneratedUtc.ToLocalTime().ToString("HH:mm 'on' d MMM yyyy", CultureInfo.CurrentCulture)}.";
+    /// <summary>
+    /// The next quarter-hour plus <see cref="CheckOffset"/>. Anchored to the wall clock rather
+    /// than to "now + 15 minutes" so every open tab is in step with the workflow and with the
+    /// other tabs, whenever each of them was opened.
+    /// </summary>
+    private static DateTimeOffset NextCheckAfter(DateTimeOffset now)
+    {
+        var boundary = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, 0, 0, now.Offset);
+
+        while (boundary + CheckOffset <= now)
+        {
+            boundary += CheckInterval;
+        }
+
+        return boundary + CheckOffset;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,25 +121,37 @@ public sealed partial class Home : IAsyncDisposable
     {
         _tabVisible = visible;
 
-        // Coming back to a tab that has been parked for a while: catch up straight away.
+        // Coming back to a tab that has been parked for a while: catch up straight away, and
+        // resync the countdown, which will have been sitting at 0:00 while the tab was hidden.
         if (visible)
         {
-            await RefreshAsync();
+            await CheckAsync();
         }
     }
 
     private async Task PollAsync()
     {
-        using var timer = new PeriodicTimer(RefreshInterval);
+        // A tick a second, so the fetch fires on the second the footer counted down to rather
+        // than up to a quarter of an hour after it.
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
 
         try
         {
             while (await timer.WaitForNextTickAsync(_shutdown.Token))
             {
+                if (DateTimeOffset.UtcNow < _nextCheckUtc)
+                {
+                    continue;
+                }
+
                 // No point polling a background tab; OnVisibilityChanged catches it up.
                 if (_tabVisible)
                 {
-                    await RefreshAsync();
+                    await CheckAsync();
+                }
+                else
+                {
+                    _nextCheckUtc = NextCheckAfter(DateTimeOffset.UtcNow);
                 }
             }
         }
@@ -122,6 +159,21 @@ public sealed partial class Home : IAsyncDisposable
         {
             // Page is going away.
         }
+    }
+
+    /// <summary>One look for new numbers, with the footer saying so while it happens.</summary>
+    private async Task CheckAsync()
+    {
+        _checking = true;
+        await InvokeAsync(StateHasChanged);
+
+        await RefreshAsync();
+
+        // Recomputed from the clock afterwards, not from the instant this check was due, so a
+        // slow fetch cannot drift the whole schedule away from the workflow's.
+        _checking = false;
+        _nextCheckUtc = NextCheckAfter(DateTimeOffset.UtcNow);
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task RefreshAsync()

@@ -282,7 +282,8 @@ main { display: block; padding: 1.25rem clamp(.5rem, 2vw, 1.5rem) 2.5rem; }
 
 .foot { margin: 1rem auto 0; max-width: 1180px; color: var(--c-muted); font-size: .78rem; }
 .foot p { margin: .2rem 0; }
-.foot .updated { font-variant-numeric: tabular-nums; }
+/* Tabular figures keep the countdown from twitching as the digits change. */
+.foot .next-check { font-variant-numeric: tabular-nums; }
 
 /* ---------- stacked layout on narrow viewports ---------- */
 

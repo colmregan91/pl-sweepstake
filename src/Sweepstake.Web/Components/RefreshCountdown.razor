@@ -1,0 +1,72 @@
+@*
+    The line under the boards. Says when the page will next look for new numbers, rather
+    than when the numbers last moved.
+
+    "Last updated" was the wrong thing to show here. update-stats.yml commits only when a
+    player's total actually changes, so generatedUtc stands still through every check that
+    finds nothing -- which is most of them. A board checked three minutes ago could read as
+    half an hour stale, and nothing on screen distinguished that from a broken fetcher.
+*@
+
+@implements IDisposable
+
+<p class="next-check">@Text</p>
+
+@code {
+    /// <summary>The instant the page will next fetch stats.json.</summary>
+    [Parameter, EditorRequired]
+    public required DateTimeOffset NextCheckUtc { get; init; }
+
+    /// <summary>True while a fetch is in flight.</summary>
+    [Parameter]
+    public bool IsChecking { get; init; }
+
+    /// <summary>False until the first stats.json has been read, which is worth saying plainly.</summary>
+    [Parameter]
+    public bool HaveStats { get; init; } = true;
+
+    private readonly CancellationTokenSource _shutdown = new();
+
+    private string Text => (HaveStats, IsChecking) switch
+    {
+        (false, _) => "Awaiting the first stats update.",
+        (_, true) => "Checking for an update…",
+        _ => $"Next check in {Remaining().ToString(@"m\:ss")}.",
+    };
+
+    protected override void OnInitialized() => _ = TickAsync();
+
+    /// <summary>
+    /// Redraws once a second. This is the only thing on the page that re-renders on a timer,
+    /// which is why it is its own component: the boards stay out of the diff.
+    /// </summary>
+    private async Task TickAsync()
+    {
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+
+        try
+        {
+            while (await timer.WaitForNextTickAsync(_shutdown.Token))
+            {
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Page is going away.
+        }
+    }
+
+    /// <summary>Never negative: a check that is running late reads 0:00, not a rising number.</summary>
+    private TimeSpan Remaining()
+    {
+        var left = NextCheckUtc - DateTimeOffset.UtcNow;
+        return left > TimeSpan.Zero ? left : TimeSpan.Zero;
+    }
+
+    public void Dispose()
+    {
+        _shutdown.Cancel();
+        _shutdown.Dispose();
+    }
+}

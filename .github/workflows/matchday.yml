@@ -1,0 +1,150 @@
+name: matchday
+
+# One job that watches, instead of many jobs that are scheduled.
+#
+# update-stats.yml asks GitHub for a run every 15 minutes. GitHub does not oblige: measured on
+# 2026-08-24, that schedule fired 19 times between 04:08Z and 19:46Z -- an average of one run
+# every 49 minutes, roughly one trigger in three. Scheduled workflows are best-effort and get
+# throttled hardest at the top of the hour, which is exactly when matches kick off. The
+# practical effect is a goal sitting unpublished for the better part of an hour, on the one
+# afternoon a week anybody is actually looking at the board.
+#
+# Frequency the scheduler will not give us, a loop will. The cron here only has to land once
+# per window; being 40 minutes late to start a two-hour watch costs far less than dropping
+# three of every four refreshes. update-stats.yml stays exactly as it is and keeps the board
+# ticking over on quiet days -- this only takes over when there is football on.
+
+on:
+  schedule:
+    # The start of each plausible PL window, in UTC. Overlapping starts queue on the shared
+    # concurrency group rather than doubling up, which usefully extends coverage when one of
+    # them is late.
+    - cron: "0 11,13,15,17,19 * * *"
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "How long to keep watching for"
+        type: string
+        default: "120"
+      interval:
+        description: "Seconds between checks"
+        type: string
+        default: "300"
+
+permissions:
+  contents: write
+
+# Deliberately the same group as update-stats.yml, not a group of its own: both jobs commit to
+# the same two files on the same branch, and only one of them should be doing that at a time.
+# GitHub keeps at most one run pending per group, so scheduled runs cannot pile up behind a
+# long watch -- the newest replaces the waiting one and the rest are dropped.
+concurrency:
+  group: update-stats
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+
+    # Well under the 6h ceiling a job is allowed, whatever `minutes` was set to.
+    timeout-minutes: 350
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # A push made with GITHUB_TOKEN does not trigger other workflows, so on the default
+          # token every commit this job makes would sit in the repo unpublished until the job
+          # ends hours later. A PAT with contents:write in STATS_PUSH_TOKEN makes each push
+          # fire deploy.yml's `on: push` the ordinary way, so the site follows within minutes.
+          #
+          # Without the secret this still works -- deploy.yml also watches this workflow, so
+          # the site catches up when the watch finishes. Slower, but never wrong.
+          token: ${{ secrets.STATS_PUSH_TOKEN || github.token }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      # Built once here rather than on every pass, so a five-minute cycle is spent on ESPN
+      # rather than on dotnet.
+      - name: Build the fetcher
+        run: dotnet build tools/Sweepstake.StatsFetcher -c Release
+
+      - name: Watch
+        env:
+          WATCH_MINUTES: ${{ inputs.minutes || '120' }}
+          INTERVAL_SECONDS: ${{ inputs.interval || '300' }}
+        run: |
+          # No -e: a single bad read from ESPN must not end the watch.
+          set -uo pipefail
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          deadline=$(( SECONDS + WATCH_MINUTES * 60 ))
+          pass=0
+          commits=0
+          failures=0
+
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            pass=$(( pass + 1 ))
+            echo "::group::pass $pass"
+
+            # stats.json rewrites generatedUtc every run, so `git diff` always looks dirty and
+            # cannot answer "did a number move". The fetcher already knows, and says so on
+            # $GITHUB_OUTPUT -- pointed at a scratch file here so each pass reads its own answer
+            # rather than the accumulated log of every pass before it.
+            answer="$(mktemp)"
+
+            if GITHUB_OUTPUT="$answer" dotnet run --project tools/Sweepstake.StatsFetcher -c Release --no-build -- fetch; then
+              changed="$(grep -oE '^changed=(true|false)$' "$answer" | tail -1 | cut -d= -f2)"
+
+              if [ "$changed" = "true" ]; then
+                git add -- src/Sweepstake.Web/wwwroot/data/stats.json data/match-stats.json
+
+                if git diff --cached --quiet; then
+                  echo "the fetcher reported a change but the files are byte-identical; nothing to commit"
+                else
+                  git commit -m "chore(stats): refresh goals and assists from ESPN"
+                  git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+
+                  if git push origin "HEAD:${GITHUB_REF_NAME}"; then
+                    commits=$(( commits + 1 ))
+                    echo "pushed"
+                  else
+                    # Leave the commit sitting locally; the next pass rebases and tries again.
+                    failures=$(( failures + 1 ))
+                    echo "push rejected, will retry next pass"
+                  fi
+                fi
+              else
+                echo "no player data moved"
+              fi
+            else
+              # The fetcher's contract is that it writes nothing at all when it fails, so the
+              # last good files are still on disk and the next pass simply tries again.
+              failures=$(( failures + 1 ))
+              echo "fetch failed, retrying next pass"
+            fi
+
+            rm -f "$answer"
+            echo "::endgroup::"
+
+            # Don't sleep past the deadline into a pass that will never run.
+            if [ "$(( SECONDS + INTERVAL_SECONDS ))" -lt "$deadline" ]; then
+              sleep "$INTERVAL_SECONDS"
+            else
+              break
+            fi
+          done
+
+          {
+            echo "### Matchday watch"
+            echo
+            echo "- watched for \`${WATCH_MINUTES}\` minutes, checking every \`${INTERVAL_SECONDS}\`s"
+            echo "- \`${pass}\` checks, **\`${commits}\` commits**, \`${failures}\` failed attempts"
+          } >> "$GITHUB_STEP_SUMMARY"

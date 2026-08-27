@@ -5,8 +5,13 @@ on:
     branches: [main]
   # A push made with GITHUB_TOKEN does not trigger further workflows, so the bot's stats
   # commit would never reach Pages on its own. This is what picks it up.
+  #
+  # matchday is here only as a safety net. When STATS_PUSH_TOKEN is set it pushes with a PAT
+  # and the `on: push` above already fires on each of its commits, which is the whole point of
+  # that watch -- waiting for it to finish would put the board hours behind the football.
+  # Without the secret this is the only thing that publishes its work, late but correctly.
   workflow_run:
-    workflows: ["update-stats"]
+    workflows: ["update-stats", "matchday"]
     types: [completed]
   workflow_dispatch:
 

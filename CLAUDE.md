@@ -162,7 +162,8 @@ This was researched and settled. Do not silently swap the data source.
 ├─ CLAUDE.md
 ├─ BUILD_BRIEF.md               # the original build spec
 ├─ .github/workflows/
-│  ├─ update-stats.yml          # scheduled: refresh stats.json, commit
+│  ├─ update-stats.yml          # scheduled: refresh stats.json, commit. Throttled -- see below
+│  ├─ matchday.yml              # one long job that loops, for when there is football on
 │  └─ deploy.yml                # build + publish to Pages
 ├─ data/
 │  ├─ picks.json                # HAND-MAINTAINED. Player registry + the 17 entrants' picks,
@@ -219,8 +220,18 @@ matching.
 }
 ```
 
-Keep `generatedUtc` and surface it in the UI. A stale scoreboard that says when it was last
-updated is honest; one that doesn't is misleading.
+Keep `generatedUtc`. The app uses it to tell a new `stats.json` from the one it already holds,
+and the fetcher rewrites it every run.
+
+It is deliberately **not** shown in the UI. `update-stats.yml` commits only when a player's
+total actually moves, so the timestamp stands still through every check that finds nothing —
+which is most of them, and all of them during an international break. A board checked three
+minutes ago therefore reads as hours stale, and "hours stale" is indistinguishable on screen
+from a fetcher that has been broken since Tuesday. The timestamp could not tell those two
+apart, so it was not the honest option it looks like.
+
+The footer counts down to the page's next check instead. That is a claim the page can make
+truthfully on its own, without needing to know anything the server did not tell it.
 
 `data/match-stats.json` — generated, committed, never served. What each fixture contributed,
 per player:
@@ -240,9 +251,8 @@ per player:
 }
 ```
 
-This file is what keeps the request count flat instead of growing with the season. Three
-timers drive it, and they are the reason a matchday costs ~60 requests and a quiet afternoon
-costs zero:
+This file is what keeps the request count flat instead of growing with the season, rather
+than proportional to how often we look. Three timers drive it:
 
 - **hot** (< 6h since first seen) — re-read every run, because the match may still be in play
 - **unsettled** (6h to 7 days) — re-read hourly, purely to absorb Opta corrections
@@ -250,6 +260,34 @@ costs zero:
 
 Whole-sweep skipping sits on top: if nothing is hot and we swept within the hour, the run
 makes **no requests at all** and rewrites `stats.json` with the same numbers.
+
+### Why there are two workflows, and why the frequent one is a loop
+
+`update-stats.yml` asks for a run every 15 minutes. **GitHub does not give us one.** Measured
+on 2026-08-24, that schedule fired 19 times between 04:08Z and 19:46Z — one run every 49
+minutes on average, about one trigger in three. Scheduled workflows are best-effort and are
+throttled hardest at the top of the hour, which is exactly when matches kick off. Every run
+succeeded; there was nothing to fix. The scheduler simply will not run a `*/15` cron at
+`*/15`.
+
+So frequency does not come from the scheduler. `matchday.yml` takes **one** trigger and loops
+inside a single job, fetching every 5 minutes for two hours. The cron only has to land once
+per window, and starting 40 minutes late costs far less than dropping three refreshes in four.
+`update-stats.yml` is unchanged and still carries quiet days.
+
+They share a concurrency group deliberately — both commit the same two files to the same
+branch, and GitHub keeps at most one run pending per group, so scheduled runs cannot pile up
+behind a long watch.
+
+**The cost is requests.** A watch window is ~24 passes at ~45 requests each, so a match day is
+roughly 5–6k requests against ESPN rather than the ~60 it was, and a quiet day ~400 once
+sweep-skipping takes hold. ESPN publishes no rate limit, so this is a judgement call rather
+than a measured safe number. The levers, in the order worth reaching for: widen `interval`,
+narrow the cron to real fixture windows instead of every day, shorten `minutes`.
+
+`matchday.yml` pushes with `STATS_PUSH_TOKEN` when that secret exists, because a push made
+with `GITHUB_TOKEN` does not trigger `deploy.yml` — without the PAT its commits reach the site
+only when the whole watch ends, which is hours too late to be worth having.
 
 ---
 
