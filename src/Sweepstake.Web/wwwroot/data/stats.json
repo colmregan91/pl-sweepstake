@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-24T20:38:37Z",
+  "generatedUtc": "2026-08-28T21:21:07Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -16,7 +16,7 @@
     "273292": {
       "name": "Antoine Semenyo",
       "goals": 0,
-      "assists": 0
+      "assists": 1
     },
     "289155": {
       "name": "Benjamin Šeško",
@@ -85,7 +85,7 @@
     },
     "253989": {
       "name": "Erling Haaland",
-      "goals": 0,
+      "goals": 2,
       "assists": 0
     },
     "102368": {
@@ -171,7 +171,7 @@
     "250787": {
       "name": "Phil Foden",
       "goals": 0,
-      "assists": 0
+      "assists": 2
     },
     "301166": {
       "name": "Thierno Barry",
