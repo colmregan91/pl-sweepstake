@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-28T21:21:07Z",
+  "generatedUtc": "2026-08-29T15:15:26Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -10,7 +10,7 @@
     },
     "235662": {
       "name": "Alexander Isak",
-      "goals": 0,
+      "goals": 1,
       "assists": 0
     },
     "273292": {
@@ -56,7 +56,7 @@
     "249524": {
       "name": "Cody Gakpo",
       "goals": 1,
-      "assists": 0
+      "assists": 1
     },
     "296395": {
       "name": "Cole Palmer",
@@ -91,12 +91,12 @@
     "102368": {
       "name": "Evanilson",
       "goals": 0,
-      "assists": 1
+      "assists": 2
     },
     "303748": {
       "name": "Florian Wirtz",
       "goals": 0,
-      "assists": 0
+      "assists": 1
     },
     "194801": {
       "name": "Harry Wilson",
@@ -150,8 +150,8 @@
     },
     "243396": {
       "name": "Morgan Gibbs-White",
-      "goals": 0,
-      "assists": 0
+      "goals": 1,
+      "assists": 1
     },
     "265653": {
       "name": "Morgan Rogers",
