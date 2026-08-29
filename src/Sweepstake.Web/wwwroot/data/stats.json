@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-29T15:15:26Z",
+  "generatedUtc": "2026-08-29T18:47:08Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -185,7 +185,7 @@
     },
     "224077": {
       "name": "Yoane Wissa",
-      "goals": 0,
+      "goals": 1,
       "assists": 1
     },
     "193297": {
