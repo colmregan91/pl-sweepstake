@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-30T13:19:38Z",
+  "generatedUtc": "2026-08-30T15:17:54Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -60,7 +60,7 @@
     },
     "296395": {
       "name": "Cole Palmer",
-      "goals": 1,
+      "goals": 2,
       "assists": 1
     },
     "315530": {
@@ -75,7 +75,7 @@
     },
     "197717": {
       "name": "Dominic Calvert-Lewin",
-      "goals": 0,
+      "goals": 1,
       "assists": 0
     },
     "257206": {
@@ -130,8 +130,8 @@
     },
     "284960": {
       "name": "João Pedro",
-      "goals": 1,
-      "assists": 1
+      "goals": 2,
+      "assists": 2
     },
     "283672": {
       "name": "Jérémy Doku",
@@ -160,7 +160,7 @@
     },
     "132659": {
       "name": "Pascal Groß",
-      "goals": 0,
+      "goals": 1,
       "assists": 0
     },
     "268533": {
