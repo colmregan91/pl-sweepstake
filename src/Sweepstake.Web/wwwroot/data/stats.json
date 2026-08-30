@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-30T16:58:36Z",
+  "generatedUtc": "2026-08-30T17:13:43Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -31,7 +31,7 @@
     "124091": {
       "name": "Bruno Fernandes",
       "goals": 3,
-      "assists": 0
+      "assists": 1
     },
     "218522": {
       "name": "Bruno Guimarães",
@@ -40,7 +40,7 @@
     },
     "271170": {
       "name": "Bryan Mbeumo",
-      "goals": 0,
+      "goals": 1,
       "assists": 0
     },
     "280555": {
