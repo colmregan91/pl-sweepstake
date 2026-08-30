@@ -1,5 +1,5 @@
 {
-  "generatedUtc": "2026-08-30T16:13:17Z",
+  "generatedUtc": "2026-08-30T16:53:33Z",
   "season": "2026",
   "source": "espn-core-api",
   "players": {
@@ -30,7 +30,7 @@
     },
     "124091": {
       "name": "Bruno Fernandes",
-      "goals": 1,
+      "goals": 2,
       "assists": 0
     },
     "218522": {
